@@ -1,0 +1,144 @@
+{
+  "info": {
+    "_postman_id": "4419eda4-c298-427e-9fc7-bedee258449a",
+    "name": "API_CI_CD",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "58418428",
+    "_collection_link": "https://go.postman.co/collection/58418428-4419eda4-c298-427e-9fc7-bedee258449a?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Get Post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const jsonData = pm.response.json();\r\n\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"Response time is less than 2000ms\", function () {\r\n    pm.expect(pm.response.responseTime).to.be.below(2000);\r\n});\r\n\r\npm.test(\"Response body contains title\", function () {\r\n    pm.expect(jsonData.title).to.include(\"sunt aut facere repellat provident occaecati\");\r\n    pm.expect(jsonData.title).to.be.a(\"string\");\r\n});\r\n\r\npm.test(\"Response body post ID\", function () {\r\n    pm.expect(jsonData.id).to.equal(1);\r\n    pm.expect(jsonData.id).to.be.a(\"number\");   \r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{cicdUrl}}/posts/1",
+          "host": [
+            "{{cicdUrl}}"
+          ],
+          "path": [
+            "posts",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get User",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const jsonData = pm.response.json();\r\n\r\npm.test(\"Status code is 200\", function () {\r\n    pm.response.to.have.status(200);\r\n});\r\n\r\npm.test(\"User ID is correct\", function () {\r\n    pm.expect(jsonData.id).to.equal(1);\r\n});\r\n\r\npm.test(\"User name is correct\", function () {\r\n    pm.expect(jsonData.name).to.equal(\"Leanne Graham\");\r\n});\r\n\r\npm.test(\"User email exists\", function () {\r\n    pm.expect(jsonData.email).to.be.a(\"string\");\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{cicdUrl}}/users/1",
+          "host": [
+            "{{cicdUrl}}"
+          ],
+          "path": [
+            "users",
+            "1"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const jsonData = pm.response.json();\r\n\r\npm.test(\"Status code is 201\", function () {\r\n    pm.response.to.have.status(201);\r\n});\r\n\r\npm.test(\"Response body contains correct Post title\", function () {\r\n    pm.expect(jsonData.title).to.eql(\"API Automation Practice\");\r\n});\r\n\r\npm.test(\"Response body contains correct body\", function () {\r\n    pm.expect(jsonData.body).to.eql(\"Learning Postman with GitHub Actions\");\r\n});\r\n\r\npm.test(\"User ID is correct\", function () {\r\n    pm.expect(jsonData.userId).to.eql(1);\r\n});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"title\" : \"API Automation Practice\",\r\n    \"body\" : \"Learning Postman with GitHub Actions\",\r\n    \"userId\" : 1\r\n}\r\n",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{cicdUrl}}/posts",
+          "host": [
+            "{{cicdUrl}}"
+          ],
+          "path": [
+            "posts"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get Invalid Post",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "pm.test(\"Response status code is 404\", function () {\r\n    pm.response.to.have.status(404);\r\n});\r\n\r\npm.test(\"Response body is empty\", function () {\r\n    pm.expect(pm.response.text()).to.eql(\"{}\");\r\n});\r\n"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{cicdUrl}}/posts/9999",
+          "host": [
+            "{{cicdUrl}}"
+          ],
+          "path": [
+            "posts",
+            "9999"
+          ]
+        }
+      },
+      "response": []
+    }
+  ]
+}
