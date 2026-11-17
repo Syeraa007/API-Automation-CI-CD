@@ -34,7 +34,7 @@ jobs:
             
             # Step 5: Execute Postman Collection
             - name: Execute API Tests
-              run: newman run collections/API_CI_CD.postman_collection.json -e CICD_QA.postman_environment.json -r cli,htmlextra --reporter-htmlextra-export reports/API-Test_Report.html
+              run: newman run collections/API_CI_CD.postman_collection.json -e collections/CICD_QA.postman_environment.json -r cli,htmlextra --reporter-htmlextra-export reports/API-Test_Report.html
             
             # Step 6: Upload HTML Report
             - name: Publish API Test Reports
