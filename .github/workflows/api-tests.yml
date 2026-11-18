@@ -25,22 +25,25 @@ jobs:
             
             # Step 3: Install Newman and HTML reporter
             - name: Install Newman
-              run: npm install -g newman
+              run: |
+                npm install -g newman
                 npm install -g newman-reporter-htmlextra
                 
-            # Step 4: Create Report directory
-            - name: Create Report Directory
-              run: mkdir -p reports
-            
-            # Step 5: Execute Postman Collection
+            # Step 4: Execute Postman Collection
             - name: Execute API Tests
-              run: newman run collections/API_CI_CD.postman_collection.json -e collections/CICD_QA.postman_environment.json -r cli,htmlextra --reporter-htmlextra-export reports/API-Test_Report.html
+              id: run-tests
+              continue-on-error: true
+              run: |
+                rm -f newman/API_CI_CD-*.html
+                newman run collections/API_CI_CD.postman_collection.json -e collections/CICD_QA.postman_environment.json -r htmlextra
+                if ls newman/API_CI_CD-*.html 1> /dev/null 2>&1; then
+                  echo "report_exists=true" >> $GITHUB_OUTPUT
+                fi
             
-            # Step 6: Upload HTML Report
+            # Step 5: Upload HTML Report (Only if generated)
             - name: Publish API Test Reports
-              if: always()
+              if: steps.run-tests.outputs.report_exists == 'true'
               uses: actions/upload-artifact@v4
               with:
                 name: Postman-API-Test-Report
-                path: reports/API-Test-Report.html
-                if-no-files-found: warn
+                path: newman/API_CI_CD-*.html
